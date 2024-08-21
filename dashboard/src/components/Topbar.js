@@ -1,6 +1,6 @@
 import React from 'react'
 import Menu from './Menu';
-const Topbar = () => {
+const TopBar = () => {
   return (
     <div className='topbar-container'>
 
@@ -22,4 +22,4 @@ const Topbar = () => {
   )
 }
 
-export default Topbar
+export default TopBar

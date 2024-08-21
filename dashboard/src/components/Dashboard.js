@@ -5,6 +5,7 @@ import Summary from './Summary';
 import Orders from './Orders';
 import Positions from './Positions';
 import Funds from './Funds';
+import Holding from './Holding'
 import App from './App'
 const Dashboard = () => {
   return (
