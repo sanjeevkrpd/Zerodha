@@ -1,30 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { VerticalGraph } from "./VerticalGraph";
 
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/allHoldings").then((res) => {
-      console.log(res.data.data); // Assuming the data is wrapped inside a 'data' object
-      setAllHoldings(res.data.data || []); // Use res.data.data if your API returns it that way
-    }).catch((error) => {
-      console.error("Error fetching holdings:", error);
-    });
+    axios
+      .get("http://localhost:8080/allHoldings")
+      .then((res) => {
+        const holdingsData = res.data.data || [];
+        console.log("Holdings Data Length:", holdingsData.length);
+        setAllHoldings(Array.isArray(holdingsData) ? holdingsData : []);
+      })
+      .catch((error) => {
+        console.error("Error fetching holdings:", error);
+        setAllHoldings([]); // Ensure allHoldings is always an array
+      });
   }, []);
-
-  // const labels = allHoldings.map((subArray) => subArray["name"]);
-
-  // const data = {
-  //   labels,
-  //   datasets: [
-  //     {
-  //       label: "Stock Price",
-  //       data: allHoldings.map((stock) => stock.price),
-  //       backgroundColor: "rgba(255, 99, 132, 0.5)",
-  //     },
-  //   ],
-  // };
 
   return (
     <>
@@ -46,23 +39,28 @@ const Holdings = () => {
           </thead>
           <tbody>
             {allHoldings.map((stock, index) => {
-              const curValue = stock.price * stock.qty;
-              const isProfit = curValue - stock.avg * stock.qty >= 0.0;
+              const qty = stock.qty || 0;
+              const price = stock.price || 0;
+              const avg = stock.avg || 0;
+              const net = parseFloat(stock.net) || 0;  // Ensuring net is a number
+              const day = parseFloat(stock.day) || 0;  // Ensuring day is a number
+              const curValue = price * qty;
+              const isProfit = curValue - avg * qty >= 0.0;
               const profClass = isProfit ? "profit" : "loss";
               const dayClass = stock.isLoss ? "loss" : "profit";
 
               return (
                 <tr key={index}>
-                  <td>{stock.name}</td>
-                  <td>{stock.qty}</td>
-                  <td>{stock.avg.toFixed(2)}</td>
-                  <td>{stock.price.toFixed(2)}</td>
+                  <td>{stock.name || "Unknown"}</td>
+                  <td>{qty}</td>
+                  <td>{avg.toFixed(2)}</td>
+                  <td>{price.toFixed(2)}</td>
                   <td>{curValue.toFixed(2)}</td>
                   <td className={profClass}>
-                    {(curValue - stock.avg * stock.qty).toFixed(2)}
+                    {(curValue - avg * qty).toFixed(2)}
                   </td>
-                  <td className={profClass}>{stock.net}</td>
-                  <td className={dayClass}>{stock.day}</td>
+                  <td className={profClass}>{net.toFixed(2)}</td>
+                  <td className={dayClass}>{day.toFixed(2)}</td>
                 </tr>
               );
             })}
@@ -88,11 +86,9 @@ const Holdings = () => {
           <p>P&L</p>
         </div>
       </div>
-      {/* <VerticalGraph data={data} /> */}
+      <VerticalGraph data={allHoldings} />
     </>
   );
 };
 
 export default Holdings;
-
-

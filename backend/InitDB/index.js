@@ -3,7 +3,7 @@ const {HoldingModel} = require('../models/HoldingModel');
 const {OrdersModel} = require("../models/OrdersModel");
 const {PositionsModel} = require("../models/PositionsModel");
 
-const url = "mongodb+srv://<username>:<password>@zerodhacluster.zxeq9.mongodb.net/zerodha?retryWrites=true&w=majority&appName=ZerodhaCluster";
+const url = "mongodb+srv://sanjeevkrpd11:iqeJMOleVxAYQ5zS@zerodhacluster.zxeq9.mongodb.net/zerodha?retryWrites=true&w=majority&appName=ZerodhaCluster";
 
 mongoose.connect(url);
 
